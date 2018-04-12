@@ -19,13 +19,23 @@ class ESindex:
             ids = ele[0]
             name =ele[1]
             desc = ele[2]
+            
             self.es.index(index="people",doc_type="records",id=ids,body={"name":name,"desc":desc})
             
             
-            
-            
+    def searchEs(self,name,desc):
+        
+        ress = self.es.search(index="people",doc_type="records",body={"query": {"match": {"name":name}}})
+        
+        print("%d documents found" % ress['hits']['total'])
+        for hit in ress['hits']['hits']:
+            print(hit["_source"])
+            print(hit['_source']['name'])
+            names = hit['_source']['name']
+            descs = hit['_source']['desc']
+        return ress
             
             
 if __name__=='__main__':
      t = ESindex();
-     t.buildIndx()
+     t.searchEs('anne','ll')
